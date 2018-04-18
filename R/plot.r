@@ -81,6 +81,15 @@ ggplot.default <- function(data = NULL, mapping = aes(), ...,
 }
 
 #' @export
+ggplot.sf <- function(data = NULL, mapping = aes(), ...,
+                           environment = parent.frame()) {
+  if(is_null(mapping$geometry)){
+	  mapping$geometry = as.name(attr(ind,"sf_column"));
+  }
+  ggplot.data.frame(fortify(data, ...), mapping, environment = environment)
+}
+
+#' @export
 ggplot.data.frame <- function(data, mapping = aes(), ...,
                               environment = parent.frame()) {
   if (!missing(mapping) && !inherits(mapping, "uneval")) {

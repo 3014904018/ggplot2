@@ -98,7 +98,7 @@ is_sf <- function(data) {
 #' @format NULL
 StatSf <- ggproto("StatSf", Stat,
   compute_group = function(data, scales) {
-    bbox <- sf::st_bbox(data[[ geom_column(data) ]])
+    bbox <- sf::st_bbox(data[[ "geometry" ]])
     data$xmin <- bbox[["xmin"]]
     data$xmax <- bbox[["xmax"]]
     data$ymin <- bbox[["ymin"]]
@@ -249,7 +249,7 @@ geom_sf <- function(mapping = aes(), data = NULL, stat = "sf",
   } else {
     geometry_col <- "geometry"
   }
-  if (is.null(mapping$geometry)) {
+  if (!is.null(data) && is.null(mapping$geometry)) {
     mapping$geometry <- as.name(geometry_col)
   }
 
