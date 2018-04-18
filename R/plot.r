@@ -84,7 +84,7 @@ ggplot.default <- function(data = NULL, mapping = aes(), ...,
 ggplot.sf <- function(data = NULL, mapping = aes(), ...,
                            environment = parent.frame()) {
   if(is_null(mapping$geometry)){
-	  mapping$geometry = as.name(attr(ind,"sf_column"));
+	  mapping$geometry = as.name(attr(data,"sf_column"));
   }
   ggplot.data.frame(fortify(data, ...), mapping, environment = environment)
 }
