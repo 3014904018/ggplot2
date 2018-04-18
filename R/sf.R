@@ -155,13 +155,32 @@ GeomSf <- ggproto("GeomSf", Geom,
     if (!inherits(coord, "CoordSf")) {
       stop("geom_sf() must be used with coord_sf()", call. = FALSE)
     }
+    known_sfc_types = c("POINT","MULTIPOINT","LINESTRING","MULTILINESTRING","POLYGON","MULTIPOLYGON")
 
-    # Need to refactor this to generate one grob per geometry type
     coord <- coord$transform(data, panel_params)
-    grobs <- lapply(1:nrow(data), function(i) {
-      sf_grob(coord[i, , drop = FALSE])
-    })
-    do.call("gList", grobs)
+
+    types = droplevels(st_geometry_type(coord[,"geometry"]))
+    if(length(levels(types))>1){
+      coord.l = split(coord,types);
+    } else {
+      coord.l = list(coord)
+      names(coord.l) = types[[1]];
+    }
+
+    #this will be easier in the mean time
+    grobs.l = list();
+    for (type in names(coord.l)){
+        if(type %in% known_sfc_types){
+           grobs.l[[type]] = sf_grob(coord.l[[type]],2);
+        } else {
+
+           grobs  = lapply(1:nrow(coord.l[[type]]),function(i){
+                sf_grob(coord.l[[type]][i, , drop=T],1);
+                 })
+           grobs.l[[type]] = do.call("gList",grobs);
+        }
+    }
+    do.call("gList", grobs.l)
   },
 
   draw_key = function(data, params, size) {
@@ -186,11 +205,15 @@ default_aesthetics <- function(type) {
   }
 }
 
-sf_grob <- function(row) {
+sf_grob <- function(row, type=1) {
   # Need to extract geometry out of corresponding list column
-  geometry <- row$geometry[[1]]
-
-  if (inherits(geometry, c("POINT", "MULTIPOINT"))) {
+  geometry =
+  if(type==1){
+      geometry <- row$geometry[[1]];
+  }else{
+      geometry <- row[,"geometry"];
+  }
+  if (inherits(geometry, c("POINT", "MULTIPOINT", "sfc_POINT","sfc_MULTIPOINT"))) {
     row <- utils::modifyList(default_aesthetics("point"), row)
     gp <- gpar(
       col = alpha(row$colour, row$alpha),
