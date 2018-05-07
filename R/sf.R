@@ -159,15 +159,14 @@ GeomSf <- ggproto("GeomSf", Geom,
 
     coord <- coord$transform(data, panel_params)
 
-    types = droplevels(st_geometry_type(coord[,"geometry"]))
-    if(length(levels(types))>1){
-      coord.l = split(coord,types);
-    } else {
+    if(inherits(coord$geometry,"sfc_GEOMETRY")){
+      types = droplevels(st_geometry_type(coord$geometry))
+      coord.l = split(coord,types)
+    }else{
       coord.l = list(coord)
-      names(coord.l) = types[[1]];
+      names(coord.l) = sub("sfc_","",class(coord$geometry)[1])
     }
 
-    #this will be easier in the mean time
     grobs.l = list();
     for (type in names(coord.l)){
         if(type %in% known_sfc_types){
