@@ -19,7 +19,7 @@ NULL
 #'   dimension (either row or column).
 #' @param scales Are scales shared across all facets (the default,
 #'   `"fixed"`), or do they vary across rows (`"free_x"`),
-#'   columns (`"free_y"`), or both rows and columns (`"free"`)
+#'   columns (`"free_y"`), or both rows and columns (`"free"`)?
 #' @param space If `"fixed"`, the default, all panels have the same size.
 #'   If `"free_y"` their height will be proportional to the length of the
 #'   y scale; if `"free_x"` their width will be proportional to the
@@ -48,7 +48,7 @@ NULL
 #' @param drop If `TRUE`, the default, all factor levels not used in the
 #'   data will automatically be dropped. If `FALSE`, all factor levels
 #'   will be shown, regardless of whether or not they appear in the data.
-#' @param margins either a logical value or a character
+#' @param margins Either a logical value or a character
 #'   vector. Margins are additional facets which contain all the data
 #'   for each of the possible values of the faceting variables. If
 #'   `FALSE`, no additional facets are included (the
@@ -374,7 +374,7 @@ FacetGrid <- ggproto("FacetGrid", Facet,
     }
 
     panel_table <- gtable_matrix("layout", panel_table,
-      panel_widths, panel_heights, respect = respect, clip = "on", z = matrix(1, ncol = ncol, nrow = nrow))
+      panel_widths, panel_heights, respect = respect, clip = coord$clip, z = matrix(1, ncol = ncol, nrow = nrow))
     panel_table$layout$name <- paste0('panel-', rep(seq_len(ncol), nrow), '-', rep(seq_len(nrow), each = ncol))
 
     panel_table <- gtable_add_col_space(panel_table,

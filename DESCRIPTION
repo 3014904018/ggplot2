@@ -7,7 +7,12 @@ Description: A system for 'declaratively' creating graphics,
     and it takes care of the details.
 Authors@R: c(
     person("Hadley", "Wickham", , "hadley@rstudio.com", c("aut", "cre")),
-    person("Winston", "Chang", , "winston@rstudio.com", "aut"),
+    person("Winston", "Chang", , role = "aut"),
+    person("Lionel", "Henry", , role = "aut"),
+    person("Thomas Lin", "Pedersen", role = "aut"),
+    person("Kohske", "Takahashi", role = "aut"),
+    person("Claus", "Wilke", role = "aut"),
+    person("Kara", "Woo", role = "aut"),
     person("RStudio", role = c("cph"))
     )
 Depends:
@@ -18,10 +23,11 @@ Imports:
     gtable (>= 0.1.1),
     lazyeval,
     MASS,
+    mgcv,
     plyr (>= 1.7.1),
     reshape2,
-    rlang (>= 0.2.0.9001),
-    scales (>= 0.4.1.9002),
+    rlang,
+    scales (>= 0.5.0),
     stats,
     tibble,
     viridisLite,
@@ -36,7 +42,6 @@ Suggests:
     mapproj,
     maps,
     maptools,
-    mgcv,
     multcomp,
     munsell,
     nlme,
@@ -49,10 +54,6 @@ Suggests:
     rmarkdown,
     sf (>= 0.3-4),
     svglite (>= 1.2.0.9001)
-Remotes: hadley/scales,
-    hadley/svglite,
-    jimhester/withr,
-    r-lib/rlang
 Enhances: sp
 License: GPL-2 | file LICENSE
 URL: http://ggplot2.tidyverse.org, https://github.com/tidyverse/ggplot2
@@ -84,6 +85,7 @@ Collate:
     'backports.R'
     'bench.r'
     'bin.R'
+    'compat-quosures.R'
     'coord-.r'
     'coord-cartesian-.r'
     'coord-fixed.r'

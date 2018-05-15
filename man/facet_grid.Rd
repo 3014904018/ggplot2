@@ -22,7 +22,7 @@ dimension (either row or column).}
 
 \item{scales}{Are scales shared across all facets (the default,
 \code{"fixed"}), or do they vary across rows (\code{"free_x"}),
-columns (\code{"free_y"}), or both rows and columns (\code{"free"})}
+columns (\code{"free_y"}), or both rows and columns (\code{"free"})?}
 
 \item{space}{If \code{"fixed"}, the default, all panels have the same size.
 If \code{"free_y"} their height will be proportional to the length of the
@@ -58,7 +58,7 @@ labels will be displayed to the left. Can also be set to
 data will automatically be dropped. If \code{FALSE}, all factor levels
 will be shown, regardless of whether or not they appear in the data.}
 
-\item{margins}{either a logical value or a character
+\item{margins}{Either a logical value or a character
 vector. Margins are additional facets which contain all the data
 for each of the possible values of the faceting variables. If
 \code{FALSE}, no additional facets are included (the

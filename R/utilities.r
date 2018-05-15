@@ -360,6 +360,15 @@ warning_wrap <- function(...) {
   warning(paste0(wrapped, collapse = "\n"), call. = FALSE)
 }
 
+var_list <- function(x) {
+  x <- encodeString(x, quote = "`")
+  if (length(x) > 5) {
+    x <- c(x[1:5], paste0("and ", length(x) - 5, " more"))
+  }
+
+  paste0(x, collapse = ", ")
+}
+
 dispatch_args <- function(f, ...) {
   args <- list(...)
   formals <- formals(f)
@@ -391,6 +400,14 @@ with_seed_null <- function(seed, code) {
     code
   } else {
     withr::with_seed(seed, code)
+  }
+}
+
+seq_asc <- function(to, from) {
+  if (to > from) {
+    integer()
+  } else {
+    to:from
   }
 }
 

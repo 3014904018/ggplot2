@@ -81,12 +81,20 @@ ggplot.default <- function(data = NULL, mapping = aes(), ...,
 }
 
 #' @export
+
 ggplot.sf <- function(data = NULL, mapping = aes(), ...,
                            environment = parent.frame()) {
   if(is_null(mapping$geometry)){
 	  mapping$geometry = as.name(attr(data,"sf_column"));
   }
   ggplot.data.frame(fortify(data, ...), mapping, environment = environment)
+}
+
+#' @export
+ggplot.function <- function(data = NULL, mapping = aes(), ...,
+                           environment = parent.frame()) {
+  # Added to avoid functions end in ggplot.default
+  stop("You're passing a function as global data.\nHave you misspelled the `data` argument in `ggplot()`", call. = FALSE)
 }
 
 #' @export
@@ -118,8 +126,6 @@ ggplot.grouped_df <- function(data, mapping = aes(), ...,
                                environment = parent.frame()) {
 
   data$.group <- dplyr::group_indices(data)
-  mapping$group <- mapping$group %||% quote(.group)
-
   ggplot.data.frame(data, mapping = mapping, ..., environment = environment)
 }
 

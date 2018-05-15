@@ -59,7 +59,7 @@
 #' qplot(factor(cyl), wt, data = mtcars, geom = c("boxplot", "jitter"))
 #' qplot(mpg, data = mtcars, geom = "dotplot")
 #' }
-qplot <- function(x, y = NULL, ..., data, facets = NULL, margins = FALSE,
+qplot <- function(x, y, ..., data, facets = NULL, margins = FALSE,
                   geom = "auto", xlim = c(NA, NA),
                   ylim = c(NA, NA), log = "", main = NULL,
                   xlab = NULL, ylab = NULL,
@@ -76,18 +76,23 @@ qplot <- function(x, y = NULL, ..., data, facets = NULL, margins = FALSE,
   is_constant <- vapply(exprs, rlang::quo_is_call, logical(1), name = "I")
 
   mapping <- new_aes(exprs[!is_missing & !is_constant], env = parent.frame())
+
   consts <- exprs[is_constant]
 
   aes_names <- names(mapping)
   mapping <- rename_aes(mapping)
 
 
-  xlab <- rlang::quo_name(exprs$x)
-  # Work around quo_name() bug: https://github.com/r-lib/rlang/issues/430
-  if (rlang::quo_is_null(exprs$y)) {
-    ylab <- "NULL"
-  } else {
-    ylab <- rlang::quo_name(exprs$y)
+  if (is.null(xlab)) {
+    xlab <- rlang::quo_name(exprs$x)
+  }
+  if (is.null(ylab)) {
+    # Work around quo_name() bug: https://github.com/r-lib/rlang/issues/430
+    if (rlang::quo_is_null(exprs$y)) {
+      ylab <- "NULL"
+    } else {
+      ylab <- rlang::quo_name(exprs$y)
+    }
   }
 
   if (missing(data)) {

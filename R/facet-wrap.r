@@ -15,15 +15,15 @@ NULL
 #'   formula or character vector. Use either a one sided formula, `~a
 #'   + b`, or a character vector, `c("a", "b")`.
 #' @param nrow,ncol Number of rows and columns.
-#' @param scales should Scales be fixed (`"fixed"`, the default),
+#' @param scales Should scales be fixed (`"fixed"`, the default),
 #'   free (`"free"`), or free in one dimension (`"free_x"`,
-#'   `"free_y"`).
+#'   `"free_y"`)?
 #' @param strip.position By default, the labels are displayed on the top of
 #'   the plot. Using `strip.position` it is possible to place the labels on
 #'   either of the four sides by setting \code{strip.position = c("top",
 #'   "bottom", "left", "right")}
-#' @param dir Direction: either "h" for horizontal, the default, or "v", for
-#'   vertical.
+#' @param dir Direction: either `"h"` for horizontal, the default, or `"v"`,
+#'   for vertical.
 #' @inheritParams facet_grid
 #' @export
 #' @examples
@@ -114,7 +114,7 @@ facet_wrap <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
 
   # Flatten all facets dimensions into a single one
   facets_list <- as_facets_list(facets)
-  facets <- rlang::flatten_if(facets_list, is.list)
+  facets <- rlang::flatten_if(facets_list, rlang::is_list)
 
   ggproto(NULL, FacetWrap,
     shrink = shrink,
@@ -259,7 +259,7 @@ FacetWrap <- ggproto("FacetWrap", Facet,
     empties <- apply(panel_table, c(1,2), function(x) is.zero(x[[1]]))
     panel_table <- gtable_matrix("layout", panel_table,
      widths = unit(rep(1, ncol), "null"),
-     heights = unit(rep(aspect_ratio, nrow), "null"), respect = respect, clip = "on", z = matrix(1, ncol = ncol, nrow = nrow))
+     heights = unit(rep(aspect_ratio, nrow), "null"), respect = respect, clip = coord$clip, z = matrix(1, ncol = ncol, nrow = nrow))
     panel_table$layout$name <- paste0('panel-', rep(seq_len(ncol), nrow), '-', rep(seq_len(nrow), each = ncol))
 
     panel_table <- gtable_add_col_space(panel_table,
@@ -332,7 +332,7 @@ FacetWrap <- ggproto("FacetWrap", Facet,
         strip_pad <- axis_height_bottom
       }
       strip_height <- unit(apply(strip_mat, 1, max_height), "cm")
-      panel_table <- weave_tables_row(panel_table, strip_mat, placement, strip_height, strip_name, 2, "on")
+      panel_table <- weave_tables_row(panel_table, strip_mat, placement, strip_height, strip_name, 2, coord$clip)
       if (!inside) {
         strip_pad[unclass(strip_pad) != 0] <- strip_padding
         panel_table <- weave_tables_row(panel_table, row_shift = placement, row_height = strip_pad)
@@ -348,7 +348,7 @@ FacetWrap <- ggproto("FacetWrap", Facet,
       }
       strip_pad[unclass(strip_pad) != 0] <- strip_padding
       strip_width <- unit(apply(strip_mat, 2, max_width), "cm")
-      panel_table <- weave_tables_col(panel_table, strip_mat, placement, strip_width, strip_name, 2, "on")
+      panel_table <- weave_tables_col(panel_table, strip_mat, placement, strip_width, strip_name, 2, coord$clip)
       if (!inside) {
         strip_pad[unclass(strip_pad) != 0] <- strip_padding
         panel_table <- weave_tables_col(panel_table, col_shift = placement, col_width = strip_pad)
